@@ -9,7 +9,8 @@ import os
 import sys
 import time
 import pickle as pkl
-
+import pathlib
+from ruamel.yaml import YAML
 from video import VideoRecorder
 from logger import Logger
 from replay_buffer import ReplayBuffer
@@ -18,6 +19,11 @@ import utils
 import dmc2gym
 import hydra
 
+
+def load_config(config_path):
+    yaml = YAML(typ='safe', pure=True)
+    configs = yaml.load((pathlib.Path(config_path).read_text()))
+    return configs
 
 def make_env(cfg):
     """Helper function to create dm_control environment"""
@@ -149,8 +155,10 @@ class Workspace(object):
             self.step += 1
 
 
-@hydra.main(config_path='config/train.yaml', strict=True)
+# @hydra.main(config_path='config/train.yaml') #strict=True)
 def main(cfg):
+    config_path = 'config/train.yaml'
+    cfg = load_config(config_path)
     workspace = Workspace(cfg)
     workspace.run()
 
