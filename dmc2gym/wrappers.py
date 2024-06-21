@@ -100,7 +100,7 @@ class DMCWrapper(core.Env):
 
         default_params = {
             'cripple_part': None,  # 'right_hip/_knee/_ankle' or 'left_hip/_knee/_ankle'
-            'force_type': 'swelling',
+            'force_type': 'step',
             'timing': 'random',
             'body_part': 'torso',
             'random_chance': 0.8,  # Chance to apply random force

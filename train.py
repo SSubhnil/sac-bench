@@ -16,6 +16,10 @@ from logger import Logger
 from replay_buffer import ReplayBuffer
 import utils
 
+os.environ["PYOPENGL_PLATFORM"] = "osmesa"
+os.environ["MUJOCO_GL"] = "osmesa"
+os.environ['PATH'] = '/local/ffmpeg-7.0-amd64-static/ffmpeg:'
+
 import dmc2gym
 import hydra
 from omegaconf import DictConfig
@@ -93,7 +97,8 @@ def main(cfg: DictConfig):
                 while not done:
                     with utils.eval_mode(self.agent):
                         action = self.agent.act(obs, sample=False)
-                    obs, reward, done, _ = self.env.step(action)
+                    obs, reward, terminate, truncate, info = self.env.step(action)
+                    done = terminate or truncate
                     self.video_recorder.record(self.env)
                     episode_reward += reward
 
