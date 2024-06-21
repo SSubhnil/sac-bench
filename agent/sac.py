@@ -56,6 +56,10 @@ class SACAgent(Agent):
         self.train()
         self.critic_target.train()
 
+    def reset(self):
+        """Reset the agent's state."""
+        pass  # Add any necessary reset logic here
+
     def train(self, training=True):
         self.training = training
         self.actor.train(training)

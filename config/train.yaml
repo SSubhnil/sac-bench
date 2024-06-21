@@ -1,13 +1,14 @@
-defaults:
-    - agent: sac
 
-env: cheetah_run
+defaults:
+  - _self_
+
+env: walker_walk
 
 # this needs to be specified manually
 experiment: test_exp
 
 num_train_steps: 1e6
-replay_buffer_capacity: ${num_train_steps}
+replay_buffer_capacity: 5e5
 
 num_seed_steps: 5000
 
@@ -24,11 +25,62 @@ log_save_tb: true
 save_video: true
 
 
-seed: 1
+seed: 42
+
+agent:
+  name: sac
+  class: agent.sac.SACAgent
+  params:
+    obs_dim: ??? # to be specified later
+    action_dim: ??? # to be specified later
+    action_range: ??? # to be specified later
+    device: ${device}
+    critic_cfg:
+      _target_: "agent.critic.DoubleQCritic"
+      obs_dim: ${agent.params.obs_dim}
+      action_dim: ${agent.params.action_dim}
+      hidden_dim: 1024
+      hidden_depth: 2
+    actor_cfg:
+      _target_: "agent.actor.DiagGaussianActor"
+      obs_dim: ${agent.params.obs_dim}
+      action_dim: ${agent.params.action_dim}
+      hidden_depth: 2
+      hidden_dim: 1024
+      log_std_bounds: [ -5, 2 ]
+    discount: 0.99
+    init_temperature: 0.1
+    alpha_lr: 1e-4
+    alpha_betas: [0.9, 0.999]
+    actor_lr: 1e-4
+    actor_betas: [0.9, 0.999]
+    actor_update_frequency: 1
+    critic_lr: 1e-4
+    critic_betas: [0.9, 0.999]
+    critic_tau: 0.005
+    critic_target_update_frequency: 2
+    batch_size: 1024
+    learnable_temperature: true
+
+double_q_critic:
+  class: agent.critic.DoubleQCritic
+  params:
+    obs_dim: ${agent.params.obs_dim}
+    action_dim: ${agent.params.action_dim}
+    hidden_dim: 1024
+    hidden_depth: 2
+
+diag_gaussian_actor:
+  class: agent.actor.DiagGaussianActor
+  params:
+    obs_dim: ${agent.params.obs_dim}
+    action_dim: ${agent.params.action_dim}
+    hidden_depth: 2
+    hidden_dim: 1024
+    log_std_bounds: [-5, 2]
 
 
 # hydra configuration
 hydra:
-    name: ${env}
     run:
-        dir: ./exp/${now:%Y.%m.%d}/${now:%H%M}_${agent.name}_${experiment}
+        dir: ./SAC/{experiment}

@@ -119,7 +119,7 @@ class Logger(object):
                  log_dir,
                  save_tb=False,
                  log_frequency=10000,
-                 agent='sac'):
+                 agent='agent'):
         self._log_dir = log_dir
         self._log_frequency = log_frequency
         if save_tb:
