@@ -29,4 +29,8 @@ class VideoRecorder(object):
     def save(self, file_name):
         if self.enabled:
             path = os.path.join(self.save_dir, file_name)
-            imageio.mimsave(path, self.frames, fps=self.fps)
+            # Explicitly specify the ffmpeg writer
+            writer = imageio.get_writer(path, fps=self.fps, format='FFMPEG')
+            for frame in self.frames:
+                writer.append_data(frame)
+            writer.close()

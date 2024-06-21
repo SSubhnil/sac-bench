@@ -9,7 +9,6 @@ import utils
 
 import hydra
 
-
 class SACAgent(Agent):
     """SAC algorithm."""
     def __init__(self, obs_dim, action_dim, action_range, device, critic_cfg,
