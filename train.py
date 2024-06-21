@@ -144,15 +144,15 @@ def main(cfg: DictConfig):
                 if self.step >= self.cfg.num_seed_steps:
                     self.agent.update(self.replay_buffer, self.logger, self.step)
 
-                next_obs, reward, done, _ = self.env.step(action)
+                next_obs, reward, terminated, trunc, info = self.env.step(action)
+
 
                 # allow infinite bootstrap
-                done = float(done)
-                done_no_max = 0 if episode_step + 1 == self.env._max_episode_steps else done
+                done = float(terminated) or float(trunc)
                 episode_reward += reward
 
-                self.replay_buffer.add(obs, action, reward, next_obs, done,
-                                       done_no_max)
+                self.replay_buffer.add(obs, action, reward, next_obs, terminated,
+                                       trunc)
 
                 obs = next_obs
                 episode_step += 1
