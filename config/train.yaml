@@ -5,7 +5,7 @@ defaults:
 env: walker_walk
 
 # this needs to be specified manually
-experiment: WALK-swelling
+experiment: WALK-vanilla
 
 num_train_steps: 1e6
 replay_buffer_capacity: 5e5
@@ -20,6 +20,7 @@ device: cuda
 # logger
 log_frequency: 10000
 log_save_tb: true
+log_dir: ./SAC/${agent.name}_${experiment}
 
 # video recorder
 save_video: true
@@ -83,4 +84,4 @@ diag_gaussian_actor:
 # hydra configuration
 hydra:
     run:
-        dir: ./SAC/{experiment}
+        dir: ${log_dir}

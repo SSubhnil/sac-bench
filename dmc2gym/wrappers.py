@@ -43,8 +43,8 @@ class DMCWrapper(core.Env):
         task_kwargs=None,
         visualize_reward={},
         from_pixels=False,
-        height=84,
-        width=84,
+        height=96,
+        width=96,
         camera_id=0,
         frame_skip=1,
         environment_kwargs=None,
@@ -182,7 +182,7 @@ class DMCWrapper(core.Env):
         extra = {'internal_state': self._env.physics.get_state().copy()}
 
         for _ in range(self._frame_skip):
-            self.apply_force()
+            #self.apply_force()
             time_step = self._env.step(action)
             reward += time_step.reward or 0
             terminated = time_step.last()

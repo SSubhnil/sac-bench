@@ -51,7 +51,7 @@ def main(cfg: DictConfig):
 
             self.cfg = cfg
 
-            self.logger = Logger(self.work_dir,
+            self.logger = Logger(cfg.log_dir,
                                  save_tb=cfg.log_save_tb,
                                  log_frequency=cfg.log_frequency,
                                  agent=cfg.agent.name)
@@ -93,7 +93,8 @@ def main(cfg: DictConfig):
                 while not done:
                     with utils.eval_mode(self.agent):
                         action = self.agent.act(obs, sample=False)
-                    obs, reward, done, _ = self.env.step(action)
+                    obs, reward, terminate, trunc, info = self.env.step(action)
+                    done = terminate or trunc
                     self.video_recorder.record(self.env)
                     episode_reward += reward
 
